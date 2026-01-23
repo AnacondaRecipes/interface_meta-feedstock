@@ -10,7 +10,7 @@ source:
   sha256: 8a4493f8bdb73fb9655dcd5115bc897e207319e36c8835f39c516a2d7e9d79a1
 
 build:
-  number: 1
+  number: 2
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
   skip: True  # [py<37]
 
@@ -18,21 +18,24 @@ requirements:
   host:
     - pip
     - python
-    - poetry-core 1.5
+    - poetry-core >=1.0.0
     - poetry-dynamic-versioning
-    - setuptools
-    - wheel
   run:
     - python
 
 test:
+  source_files:
+    - tests
   imports:
     - interface_meta
     - interface_meta.utils
   requires: 
     - pip
+    - pytest
   commands: 
     - pip check
+    - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
+    - pytest -v tests
 
 about:
   home: https://github.com/matthewwardrop/interface_meta
